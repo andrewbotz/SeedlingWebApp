@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Box, Stack, Button } from 'grommet';
-import { Grow } from 'grommet-icons';
+import { Box, Stack } from 'grommet';
 
 const Logo = () => (
   <Stack anchor="center">

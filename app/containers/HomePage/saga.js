@@ -1,17 +1,19 @@
-/**
- * Gets the repositories of the user from Github
- */
-
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { LOAD_REPOS } from 'containers/App/constants';
 import { reposLoaded, repoLoadingError } from 'containers/App/actions';
-
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
+import { LOAD_JOBS } from 'containers/HomePage/constants';
+import {
+  loadJobs,
+  loadJobsSucess,
+  loadJobsFailure,
+} from 'containers/HomePage/actions';
 
-/**
- * Github repos request/response handler
- */
+// todo-abotz: move to central spot
+const API_URL = `https://locahost:3001`;
+const JOBS_API_URL = `${API_URL}/jobs`;
+
 export function* getRepos() {
   // Select username from store
   const username = yield select(makeSelectUsername());
@@ -26,13 +28,18 @@ export function* getRepos() {
   }
 }
 
-/**
- * Root saga manages watcher lifecycle
- */
+export function* getJobs() {
+  yield put(loadJobs());
+
+  try {
+    const jobs = yield call(request, JOBS_API_URL);
+    yield put(loadJobsSucess, jobs);
+  } catch (error) {
+    yield put(loadJobsFailure, error);
+  }
+}
+
 export default function* githubData() {
-  // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
-  // By using `takeLatest` only the result of the latest API call is applied.
-  // It returns task descriptor (just like fork) so we can continue execution
-  // It will be cancelled automatically on component unmount
+  yield takeLatest(LOAD_JOBS, getJobs);
   yield takeLatest(LOAD_REPOS, getRepos);
 }

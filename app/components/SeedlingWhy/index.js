@@ -12,7 +12,6 @@ const SeedlingWhy = ({ size, ...props }) => (
   <Fragment>
     <Box direction="row" {...props}>
       <StyledHeading size={size}>Seedling</StyledHeading>
-      {/* <Heading size={size}>Xtreme</Heading> */}
     </Box>
     <Paragraph margin={{ top: 'none' }} textAlign="center" size="xxlarge">
       Seedling helps non-profit organizations by posting help wanted for
@@ -24,7 +23,7 @@ const SeedlingWhy = ({ size, ...props }) => (
 );
 
 SeedlingWhy.propTypes = {
-  size: PropTypes.string.isRequired,
+  size: PropTypes.string,
 };
 
 export default SeedlingWhy;

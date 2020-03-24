@@ -1,50 +1,33 @@
 import React, { useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-// import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { push } from 'connected-react-router';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
-import {
-  makeSelectRepos,
-  makeSelectLoading,
-  makeSelectError,
-} from 'containers/App/selectors';
+import { makeSelectJobs } from 'selectors/JobSelectors';
 
 import SeedlingWhy from 'components/SeedlingWhy';
+import PostForHelpButton from 'components/PostForHelpButton';
+import JobList from 'components/JobList';
 import { Box } from 'grommet';
-import { loadRepos } from '../App/actions';
-import { changeUsername } from './actions';
-import { makeSelectUsername } from './selectors';
-import reducer from './reducer';
-import saga from './saga';
+import { loadJobs } from 'actions/JobActions';
+import reducer from 'reducers/JobReducer';
+import saga from 'sagas/JobSagas';
 
-const key = 'home';
+// TODO-abotz: move injection keys to central location
+const key = 'job';
 
-export function HomePage({
-  username,
-  loading,
-  error,
-  repos,
-  onSubmitForm,
-  onChangeUsername,
-}) {
+export function HomePage({ onGetJobs, jobs, navigateToJobPage }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
 
   useEffect(() => {
-    // When initial state username is not null, submit the form to load repos
-    if (username && username.trim().length > 0) onSubmitForm();
+    onGetJobs();
   }, []);
-
-  const reposListProps = {
-    loading,
-    error,
-    repos,
-  };
 
   return (
     <article>
@@ -52,39 +35,32 @@ export function HomePage({
         <title>Home Page</title>
         <meta
           name="description"
-          content="A React.js Boilerplate application homepage"
+          content="Seedling helps non-profit organizations find development and design help."
         />
       </Helmet>
       <Box align="center" pad="large">
         <SeedlingWhy />
+        <PostForHelpButton />
+        <JobList jobs={jobs} onNavigateToJobPage={navigateToJobPage} />
       </Box>
     </article>
   );
 }
 
 HomePage.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
-  onSubmitForm: PropTypes.func,
-  username: PropTypes.string,
-  onChangeUsername: PropTypes.func,
+  jobs: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
+  onGetJobs: PropTypes.func,
+  navigateToJobPage: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  repos: makeSelectRepos(),
-  username: makeSelectUsername(),
-  loading: makeSelectLoading(),
-  error: makeSelectError(),
+  jobs: makeSelectJobs(),
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
-    onSubmitForm: evt => {
-      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadRepos());
-    },
+    onGetJobs: () => dispatch(loadJobs.request()),
+    navigateToJobPage: id => dispatch(push(`/jobs/${id}`, { id })),
   };
 }
 

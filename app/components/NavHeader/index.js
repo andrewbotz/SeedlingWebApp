@@ -1,6 +1,6 @@
 import React from 'react';
 import { Anchor, Box, Text, ResponsiveContext } from 'grommet';
-import { Logo } from '../Logo';
+// import { Logo } from '../Logo';
 import { SocialMedia } from '../SocialMedia';
 
 const NavHeader = () => (
