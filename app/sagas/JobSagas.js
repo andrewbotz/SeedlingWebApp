@@ -15,7 +15,9 @@ const JOBS_API_URL = `${API_URL}/jobs`;
 
 export function* getJobs() {
   try {
-    const jobs = yield call(request, JOBS_API_URL);
+    // TODO-ABOTZ: Need to create services for these API url calls, create way to extend from request.js
+    const requestURLOrderByDatePosted = `${JOBS_API_URL}/?filter[order][0]=datePosted DESC&filter[include][][relation]=organization`;
+    const jobs = yield call(request, requestURLOrderByDatePosted);
     yield put(loadJobs.success(jobs));
   } catch (error) {
     // TODO-ABOTZ: Need to report failure to something? Sentry?
@@ -25,7 +27,12 @@ export function* getJobs() {
 
 export function* getJob(action) {
   try {
-    const job = yield call(request, `${JOBS_API_URL}/${action.id}`);
+    // https://strongloop.com/strongblog/inclusion-of-related-models/
+    // http://localhost:3001/jobs?filter[include][][relation]=organization
+    const requestURLIncludeOrganization = `${JOBS_API_URL}/${
+      action.id
+    }?filter[include][][relation]=organization`;
+    const job = yield call(request, requestURLIncludeOrganization);
     yield put(loadJob.success(job));
   } catch (error) {
     yield put(loadJob.failure(error));

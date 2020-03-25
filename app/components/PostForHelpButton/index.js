@@ -8,7 +8,7 @@ const PostForHelpButton = props => (
       primary
       label="Post for Help"
       size="large"
-      color="accent-1"
+      // color="accent-1"
       onClick={() => {}}
       {...props}
     />

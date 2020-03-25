@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import { Box, Heading, Text } from 'grommet';
 
@@ -8,7 +9,7 @@ const JobCard = props => {
   return (
     <Box
       round="xxsmall"
-      elevation="small"
+      elevation="medium"
       onClick={() => onNavigateToJobPage(job.id)}
     >
       <Box pad={{ horizontal: 'small' }}>
@@ -19,11 +20,18 @@ const JobCard = props => {
           justify="between"
         >
           <Box>
-            <Heading level="3" margin="none" color="brand">
+            <Heading level="3" color="brand">
+              {job.organization.name}
+            </Heading>
+            <Heading
+              level="4"
+              color="dark-2"
+              style={{ marginTop: 0, marginBottom: 0 }}
+            >
               {job.title}
             </Heading>
-            <Text color="dark-5" size="small">
-              {job.city}, {job.state}
+            <Text color="dark-5" size="small" margin={{ top: 'none' }}>
+              {job.city}, {job.state} &#8226; {moment(job.datePosted).fromNow()}
             </Text>
           </Box>
         </Box>

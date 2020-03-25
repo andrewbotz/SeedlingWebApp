@@ -5,6 +5,10 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { Box, Heading, Text } from 'grommet';
+import JobDescriptionSection from 'components/JobDescriptionSection';
+import ApplyNowButton from 'components/ApplyNowButton';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -17,6 +21,12 @@ import saga from 'sagas/JobSagas';
 import { loadJob, loadJobOrganization } from 'actions/JobActions';
 
 const key = 'job';
+
+// TODO-Abotz: clean up inline styling and move this out to own file?
+export const Wrapper = styled(Box)`
+  max-width: 800px;
+  margin: 0 auto;
+`;
 
 export function JobPage({
   onGetJob,
@@ -42,9 +52,39 @@ export function JobPage({
           content="Seedling non-profit job to apply for."
         />
       </Helmet>
-      <div>Job Page</div>
-      <div>{job.title || 'unknown job name'}</div>
-      <div>{jobOrganization.name || 'unknown job organization name'}</div>
+      <Wrapper pad="large">
+        <Heading level="2" color="brand">
+          {jobOrganization.name}
+        </Heading>
+        <Heading level="3" style={{ marginBottom: 0 }}>
+          {job.title}
+        </Heading>
+        <Text size="small" color="dark-4" margin={{ bottom: 'medium' }}>
+          {jobOrganization.city}, {jobOrganization.state}
+        </Text>
+
+        <JobDescriptionSection title="Description" content={job.description} />
+        {job.responsibilities && (
+          <JobDescriptionSection
+            title="Responsibilities"
+            content={job.responsibilities}
+          />
+        )}
+        {job.desiredExperience && (
+          <JobDescriptionSection
+            title="Desired Experience"
+            content={job.desiredExperience}
+          />
+        )}
+        {job.benefits && (
+          <JobDescriptionSection title="Benefits" content={job.benefits} />
+        )}
+        <ApplyNowButton
+          // TODO-abotz: Wire up apply now clicked button
+          // eslint-disable-next-line no-console
+          onApplyNowClicked={() => console.log('Apply Now Clicked')}
+        />
+      </Wrapper>
     </article>
   );
 }
