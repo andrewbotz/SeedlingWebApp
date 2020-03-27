@@ -1,5 +1,10 @@
 import produce from 'immer';
-import { LOAD_JOBS, LOAD_JOB, LOAD_JOB_ORGANIZATION } from 'actions/JobActions';
+import {
+  LOAD_JOBS,
+  LOAD_JOB,
+  LOAD_JOB_ORGANIZATION,
+  SAVE_JOB_APPLICANT,
+} from 'actions/JobActions';
 
 export const INITIAL_STATE = {
   loading: false,
@@ -16,6 +21,7 @@ const jobReducer = (state = INITIAL_STATE, action) =>
       case LOAD_JOBS.REQUEST:
       case LOAD_JOB_ORGANIZATION.REQUST:
       case LOAD_JOB.REQUEST:
+      case SAVE_JOB_APPLICANT.REQUEST:
         draft.loading = true;
         draft.error = false;
         break;
@@ -23,6 +29,7 @@ const jobReducer = (state = INITIAL_STATE, action) =>
       case LOAD_JOBS.FAILURE:
       case LOAD_JOB.FAILURE:
       case LOAD_JOB_ORGANIZATION.FAILURE:
+      case SAVE_JOB_APPLICANT.FAILURE:
         draft.loading = false;
         draft.error = action.error;
         break;
@@ -43,6 +50,11 @@ const jobReducer = (state = INITIAL_STATE, action) =>
         draft.loading = false;
         draft.error = false;
         draft.jobOrganization = action.jobOrganization;
+        break;
+
+      case SAVE_JOB_APPLICANT.SUCCESS:
+        draft.loading = false;
+        draft.error = false;
         break;
 
       default:

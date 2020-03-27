@@ -29,3 +29,12 @@ export const loadJobOrganization = {
     action(LOAD_JOB_ORGANIZATION[SUCCESS], { jobOrganization }),
   failure: error => action(LOAD_JOB_ORGANIZATION[FAILURE], { error }),
 };
+
+export const SAVE_JOB_APPLICANT = createRequestTypes('SAVE_JOB_APPLICANT');
+export const saveJobApplicant = {
+  request: (id, applicant) =>
+    action(SAVE_JOB_APPLICANT[REQUEST], { id, applicant }),
+  success: jobApplicant =>
+    action(SAVE_JOB_APPLICANT[SUCCESS], { jobApplicant }),
+  failure: error => action(SAVE_JOB_APPLICANT[FAILURE], { error }),
+};

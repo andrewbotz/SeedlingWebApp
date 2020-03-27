@@ -6,6 +6,7 @@ import { Switch, Route } from 'react-router-dom';
 // Containers
 import HomePage from 'containers/HomePage/Loadable';
 import JobPage from 'containers/JobPage/Loadable';
+import ApplyPage from 'containers/ApplyPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 // Components
@@ -27,6 +28,7 @@ export default function App() {
       <NavHeader />
       <Switch>
         <Route exact path="/" component={HomePage} />
+        <Route path="/jobs/:id/apply" component={ApplyPage} />
         <Route path="/jobs/:id" component={JobPage} />
         <Route path="" component={NotFoundPage} />
       </Switch>

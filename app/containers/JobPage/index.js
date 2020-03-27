@@ -5,10 +5,12 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { useParams } from 'react-router-dom';
+import { push } from 'connected-react-router';
+
 import styled from 'styled-components';
-import { Box, Heading, Text } from 'grommet';
+import { Box, Heading, Text, Button } from 'grommet';
 import JobDescriptionSection from 'components/JobDescriptionSection';
-import ApplyNowButton from 'components/ApplyNowButton';
+// import ApplyNowButton from 'components/ApplyNowButton';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -33,6 +35,7 @@ export function JobPage({
   job,
   onGetJobOrganization,
   jobOrganization,
+  onNavigateToApplyPage,
 }) {
   const { id } = useParams();
   useInjectReducer({ key, reducer });
@@ -79,11 +82,16 @@ export function JobPage({
         {job.benefits && (
           <JobDescriptionSection title="Benefits" content={job.benefits} />
         )}
-        <ApplyNowButton
-          // TODO-abotz: Wire up apply now clicked button
-          // eslint-disable-next-line no-console
-          onApplyNowClicked={() => console.log('Apply Now Clicked')}
-        />
+
+        <Box align="center" pad="medium">
+          <Button
+            primary
+            label="Apply Now"
+            onClick={() => onNavigateToApplyPage(job.id)}
+            color="neutral-1"
+            size="large"
+          />
+        </Box>
       </Wrapper>
     </article>
   );
@@ -94,6 +102,7 @@ JobPage.propTypes = {
   onGetJob: PropTypes.func,
   jobOrganization: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   onGetJobOrganization: PropTypes.func,
+  onNavigateToApplyPage: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -105,6 +114,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     onGetJob: id => dispatch(loadJob.request(id)),
     onGetJobOrganization: id => dispatch(loadJobOrganization.request(id)),
+    onNavigateToApplyPage: id => dispatch(push(`/jobs/${id}/apply`)),
   };
 }
 
